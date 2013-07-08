@@ -4,7 +4,9 @@ Program Transformations
 CPS
 ---
 
-  * Gateway drug of program transformations.
+  * Gateway drug of program transformations.  (Since it ensures a
+    program has useful properties, such as all serious calls being in
+    tail position.)
 
   * Need to describe what a continuation is first.
 
