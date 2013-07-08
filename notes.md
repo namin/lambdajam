@@ -1,14 +1,16 @@
 Program Transformations (a.k.a., Correctness-Preserving Transformations)
 =======================
 
-CPS
----
+CPS (Continuation-Passing Style)
+--------------------------------
 
   * Gateway drug of program transformations.  (Since it ensures a
     program has useful properties, such as all serious calls being in
     tail position.)
 
-  * Need to describe what a continuation is first.
+  * A continuation represents "the rest of the computation."  A
+    continuation can be represented as a procedure of one argument:
+    (lambda (v) ...).
 
   * Other necessary concepts: tail position/tail call, serious vs
     trivial expressions.
