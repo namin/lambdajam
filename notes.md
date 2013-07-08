@@ -116,6 +116,33 @@ Other transformations
 Resources
 ---------
 
+Indiana University C311 resources:
+
+Essentials of Programming Languages, 3rd Edition
+Daniel P. Friedman and Mitchell Wand
+MIT Press, 2008
+http://www.eopl3.com/
+
+CPS refresher
+https://cgi.soic.indiana.edu/~c311/doku.php?id=cps-refresher
+
+Using ParentheC to Transform Scheme Programs to C, or How to Write Interesting Recursive Prorgams in a Spartan Host
+https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=parenthec.pdf
+
+Notes from the Feb 16, 2010 lecture on continuation-passing style.
+https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=cps-notes.scm
+
+Notes on versions of the product procedure written three ways: in accumulator-passing style, in continuation-passing style, and in direct style using call/cc.
+https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=product3ways.scm
+
+Notes on making continuations representation-independent methodically.
+https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=ri-k-method.ss
+
+Notes on registerization and trampolining.
+https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=reg-tramp.pdf
+
+--
+
 Matt Might's blog posts (http://matt.might.net):
 
 By example: Continuation-passing style in JavaScript 
@@ -124,22 +151,17 @@ http://matt.might.net/articles/by-example-continuation-passing-style/
 How to compile with continuations
 http://matt.might.net/articles/cps-conversion/
 
-
-Essentials of Programming Languages, 3rd Edition
-Daniel P. Friedman and Mitchell Wand
-MIT Press, 2008
-http://www.eopl3.com/
-
+--
 
 Compiling with Continuations
 Andrew W. Appel
 Cambridge University Press, 1992
 
-
 Compiling with Continuations, Continued
 Andrew Kennedy
 http://research.microsoft.com/en-us/um/people/akenn/sml/CompilingWithContinuationsContinued.pdf
 
+--
 
 Will's YouTube Hangouts
 Tutorial Tuesday #1: Intro to continuations, call/cc, and CPS 
