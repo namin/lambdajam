@@ -1,0 +1,3 @@
+#!/bin/bash
+
+petite --script scheme-to-c.scm -t <$1
