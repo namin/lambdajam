@@ -88,7 +88,7 @@
 ;; Utilities.
 
 ; void : -> void
-(define (void) (if #f #t))
+(define (void) #f)
 
 ; tagged-list? : symbol value -> boolean
 (define (tagged-list? tag l)
@@ -494,7 +494,7 @@
 
 ; letrec=>lets+sets : letrec-exp -> exp
 (define (letrec=>lets+sets exp)
-  (if (letrec? exp)
+  (when (letrec? exp)
       (let* ((bindings  (letrec->bindings exp))
              (namings   (map (lambda (b) (list (car b) #f)) bindings))
              (names     (letrec->bound-vars exp))
@@ -635,7 +635,7 @@
 
     ; Sugar:
     ((let? exp)      (free-vars (let=>lambda exp)))
-    ((letrec? exp)   not-handled)
+    ((letrec? exp)   (error "letrec not handled: " exp))
     ((begin? exp)    (reduce union (map free-vars (begin->exps exp)) '()))
 
     ; IR (1):
