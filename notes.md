@@ -1,6 +1,30 @@
 Program Transformations
 =======================
 
+CPS
+---
+
+  * Gateway drug of program transformations.
+
+  * Need to describe what a continuation is first.
+
+  * Other necessary concepts: tail position/tail call, serious vs
+    trivial expressions.
+
+  * Give rules for CPSing.  Cases that trip people up include nested
+    conds/conditionals with serious tests.  Lambdas also often cause
+    problems.  M (curried map) is a good example for showing how to
+    CPS the call.
+    
+  * Should point out that evaluation order of subexpressions in a
+    Scheme call is unspecified; as a result, there may be more than
+    one way to CPS.   
+    
+  * Point out properties that CPS gives you (and properties of other
+    transformations as well, as we cover them): all serious calls are
+    tail calls, all arguments to calls are simple, fix order of
+    evaluation.
+
 Trampolining
 ------------
 
