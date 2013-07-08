@@ -25,6 +25,9 @@ CPS
     tail calls, all arguments to calls are simple, fix order of
     evaluation.
 
+  * Use Petite's Chez trace to show shape of recursive calls in direct
+    style and CPSed.
+
 Trampolining
 ------------
 
