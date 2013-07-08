@@ -35,7 +35,8 @@ Trampolining
 
   * We cannot trampoline without CPSing first, because the non-tail
     calls must return the expected type, not a procedure. For example,
-    with Fibonacci, the + call would get confused getting procedures.
+    with Fibonacci, the + call would get confused getting procedures
+    (thunks).
 
   * Show: when compiling to C, CPS by itself does not guarantee a
     bounded stack. Trampolining is one solution.
