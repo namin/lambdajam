@@ -13,7 +13,7 @@
 
 ;; To run the compiler:
 
-;;  $ petite --script this-file.scm < program.scm > out.c
+;;  $ scheme this-file.scm < program.scm > out.c
 ;;  $ gcc -o out out.c
 
 ;; Additional options to be used on a definition and an expression:

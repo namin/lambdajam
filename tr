@@ -1,5 +1,5 @@
 #!/bin/bash
 
-petite --script scheme-to-c.scm -t $1 <&0 >out.scm
+./interp -t $1 <&0 >out.scm
 cat out.scm
 
