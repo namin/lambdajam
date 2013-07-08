@@ -25,6 +25,9 @@ CPS
     tail calls, all arguments to calls are simple, fix order of
     evaluation.
 
+  * Use Petite's Chez trace to show shape of recursive calls in direct
+    style and CPSed.
+
 Trampolining
 ------------
 
@@ -53,11 +56,14 @@ Representation Independent and Defunctionalization
 
   * RI wrt to continuations. Other example: in interpreter, RI wrt to
     the env.
+
   * Step-by-step RI wrt to continuations:
     * explicit apply-k
     * abstract constructors one at a time, inside-out
+
   * Now, on to defunctionalization: we shift the smarts from the
     constructors to the destructor (apply-k).
+
   * Step-by-step defunctionalization:
     * Start by changing apply-k to a matcher. Falls through procedure
       case until all constructors are translated.
@@ -66,20 +72,25 @@ Representation Independent and Defunctionalization
       * Grab the arguments, newline, paste them, with the name,
         quasiquote.
       * Grab the body with the v, push it to apply-k.
+
   * First-order representation is nice for tracing. Try trace-define
     instead of define on CPSed first-order function.
+
   * Interpreter example. RI wrt to env. As an exercise: RI wrt to
     closures.
 
 Registerization
 ---------------
 
-  * Start with CPS, once more the gateway drug of program
-    transformations.
+  * Start with CPS (once more the gateway drug of program
+    transformations), since we want to get rid of the stack, and since
+    we want to avoid clobbering registers.
+
   * If only registerizing the main function and not the continuations,
     without representation independence, need to backup registers.
+
   * With RI, all good. Tricky thing is understanding what is "serious"
     and needs registerizing, and what is not. Once more, the goal is
     to avoid stack use: procedures are just goto-labels.
+
   * Explicit PC counter.
-      
