@@ -100,3 +100,11 @@ Registerization
     to avoid stack use: procedures are just goto-labels.
 
   * Explicit PC counter.
+
+
+
+Other transformations
+---------------------
+  * Closure conversion
+
+  * Optimizations (loop unrolling, etc)
