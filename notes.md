@@ -141,6 +141,20 @@ https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=ri-k-method.ss
 Notes on registerization and trampolining.
 https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=reg-tramp.pdf
 
+Assignments:
+
+Assignment 6: Continuation-Passing Style
+https://cgi.soic.indiana.edu/~c311/doku.php?id=assignment-6
+
+Assignment 7: Continuations and Representation Independence
+https://cgi.soic.indiana.edu/~c311/doku.php?id=assignment-7
+
+Assignment 8: Registerization and Trampolining
+https://cgi.soic.indiana.edu/~c311/doku.php?id=assignment-8
+
+Assignment 9: ParentheC Interpreter
+https://cgi.soic.indiana.edu/~c311/doku.php?id=assignment-9
+
 --
 
 Matt Might's blog posts (http://matt.might.net):
