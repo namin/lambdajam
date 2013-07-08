@@ -1,4 +1,4 @@
-Program Transformations
+Program Transformations (a.k.a., Correctness-Preserving Transformations)
 =======================
 
 CPS
@@ -101,10 +101,40 @@ Registerization
 
   * Explicit PC counter.
 
-
-
 Other transformations
 ---------------------
   * Closure conversion
 
   * Optimizations (loop unrolling, etc)
+
+Resources
+---------
+
+Matt Might's blog posts (http://matt.might.net):
+
+By example: Continuation-passing style in JavaScript 
+http://matt.might.net/articles/by-example-continuation-passing-style/
+
+How to compile with continuations
+http://matt.might.net/articles/cps-conversion/
+
+
+Essentials of Programming Languages, 3rd Edition
+Daniel P. Friedman and Mitchell Wand
+MIT Press, 2008
+http://www.eopl3.com/
+
+
+Compiling with Continuations
+Andrew W. Appel
+Cambridge University Press, 1992
+
+
+Compiling with Continuations, Continued
+Andrew Kennedy
+http://research.microsoft.com/en-us/um/people/akenn/sml/CompilingWithContinuationsContinued.pdf
+
+
+Will's YouTube Hangouts
+Tutorial Tuesday #1: Intro to continuations, call/cc, and CPS 
+http://www.youtube.com/watch?v=2GfFlfToBCo&feature=share&list=PLO4TbomOdn2dD5HsavVOhlZzZ37o73P3F
