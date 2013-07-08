@@ -4,7 +4,9 @@ Program Transformations
 CPS
 ---
 
-  * Gateway drug of program transformations.
+  * Gateway drug of program transformations.  (Since it ensures a
+    program has useful properties, such as all serious calls being in
+    tail position.)
 
   * Need to describe what a continuation is first.
 
@@ -33,7 +35,8 @@ Trampolining
 
   * We cannot trampoline without CPSing first, because the non-tail
     calls must return the expected type, not a procedure. For example,
-    with Fibonacci, the + call would get confused getting procedures.
+    with Fibonacci, the + call would get confused getting procedures
+    (thunks).
 
   * Show: when compiling to C, CPS by itself does not guarantee a
     bounded stack. Trampolining is one solution.
@@ -53,6 +56,9 @@ Trampolining
 
 Representation Independent and Defunctionalization
 --------------------------------------------------
+
+  * 'RI' is always with respect to some datatype (continuations,
+    environments, stores, procedures, etc.)
 
   * RI wrt to continuations. Other example: in interpreter, RI wrt to
     the env.
@@ -94,3 +100,11 @@ Registerization
     to avoid stack use: procedures are just goto-labels.
 
   * Explicit PC counter.
+
+
+
+Other transformations
+---------------------
+  * Closure conversion
+
+  * Optimizations (loop unrolling, etc)
