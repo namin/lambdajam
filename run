@@ -1,0 +1,5 @@
+#!/bin/bash
+
+petite --script scheme-to-c.scm $1 <&0 >out.c
+gcc -o out out.c
+./out
