@@ -54,6 +54,9 @@ Trampolining
 Representation Independent and Defunctionalization
 --------------------------------------------------
 
+  * 'RI' is always with respect to some datatype (continuations,
+    environments, stores, procedures, etc.)
+
   * RI wrt to continuations. Other example: in interpreter, RI wrt to
     the env.
 
