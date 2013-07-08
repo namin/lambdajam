@@ -238,7 +238,7 @@
 
   (define empty-k
     (lambda ()
-      (lambda () (set! *pc* *v*))))
+      (lambda () (set! *pc* #f))))
 
   (define fib-inner-k
     (lambda (v1 k)
@@ -272,8 +272,8 @@
     (set! *pc* fib-cps)
     (let loop ()
       (*pc*)
-      (if (procedure? *pc*)
+      (if *pc*
           (loop)
-          *pc*)))
+          *v*)))
 
   (fib-tests fib))
