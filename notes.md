@@ -30,6 +30,7 @@ CPS
   * Use Petite's Chez trace to show shape of recursive calls in direct
     style and CPSed.
 
+
 Trampolining
 ------------
 
@@ -54,7 +55,8 @@ Trampolining
   * Later: first-order representation for the thunk, registerization
     of thunk as an explicit PC counter.
 
-Representation Independent and Defunctionalization
+
+Representation Independence and Defunctionalization
 --------------------------------------------------
 
   * 'RI' is always with respect to some datatype (continuations,
@@ -85,6 +87,7 @@ Representation Independent and Defunctionalization
   * Interpreter example. RI wrt to env. As an exercise: RI wrt to
     closures.
 
+
 Registerization
 ---------------
 
@@ -101,12 +104,15 @@ Registerization
 
   * Explicit PC counter.
 
+
 Other transformations
 ---------------------
+
   * Closure conversion
 
   * Optimizations (loop unrolling, etc)
 
+  
 Resources
 ---------
 
