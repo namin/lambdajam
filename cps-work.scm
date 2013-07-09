@@ -37,3 +37,32 @@
 ;;; 4. In general,
 (f (g x)) 
 (g x (lambda (v) (f v k)))
+
+;;; Brain teasers: translate to CPS, mechanically.
+;;; don't think about what the function does, follow the rules.
+(define foo1
+  (lambda (x)
+    (if (or (= x 0) (foo1 (- x 1)))
+        (modulo x 2)
+        (foo1 (- x 2)))))
+(foo1 10)
+
+(define foo2
+  (lambda (f)
+    (lambda (xs)
+      (if (null? xs)
+          xs
+          ((foo2 f) ((foo2 f) (cdr xs)))))))
+((foo2 add1) '(1 2 3))
+
+(define foo3
+  (lambda (f n)
+    (let ((a (f n)))
+      (f a))))
+(foo3 add1 0)
+
+(define foo4
+  (lambda (f)
+    (f (lambda (g) (g g))
+       (lambda (g) (g g)))))
+(foo4 (lambda (a b) a))
