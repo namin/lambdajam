@@ -156,7 +156,7 @@ static void print_value(Value v, int dot) {
     print_value(*v.cons.car, 0);
     if ((*v.cons.cdr).t!=NIL) printf(" ");
     print_value(*v.cons.cdr, 1);
-    printf(")");
+    if (!dot) printf(")");
     break;
   case SYMBOL:
     printf("%s", v.sym.name);
