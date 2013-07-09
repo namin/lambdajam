@@ -582,6 +582,7 @@
 (define (serious? exp)
   (and (app? exp)
        (or
+        (not (quote? exp))
         (not (prim? (app->fun exp)))
         (memq #t (map serious? exp)))))
 
@@ -605,6 +606,7 @@
          ,(cps-T (if->then exp) cont)
          ,(cps-T (if->else exp) cont)))
   (cond
+   ((quote? exp)      `(,cont ,(cps-M exp)))
    ((lambda? exp)     `(,cont ,(cps-M exp)))
    ((if? exp)         (if (not (serious? (if->condition exp)))
                           (cps-T-if (if->condition exp))
@@ -624,7 +626,7 @@
 ;;; cps-M : exp -> exp
 (define (cps-M exp)
   (cond
-   ((lambda? exp)           (let (($k (gensym '$k)))
+   ((lambda? exp)     (let (($k (gensym '$k)))
                          `(lambda (,@(lambda->formals exp) ,$k)
                             ,(cps-T (lambda->exp exp) $k))))
    (else               exp)))
