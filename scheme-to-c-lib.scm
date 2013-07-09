@@ -263,6 +263,14 @@
 (define (lambda->exp exp)
   (caddr exp))
 
+; quote? : exp -> boolean
+(define (quote? exp)
+  (tagged-list? 'quote exp))
+
+; quote->exp : quote-exp -> exp
+(define (quote->exp exp)
+  (cadr exp))
+
 ; if? : exp -> boolean
 (define (if? exp)
   (tagged-list? 'if exp))
@@ -308,7 +316,12 @@
 
 ; prim? : exp -> boolean
 (define (prim? exp)
-  (or (eq? exp 'procedure?)
+  (or (eq? exp 'pair?)
+      (eq? exp 'cons)
+      (eq? exp 'car)
+      (eq? exp 'cdr)
+      (eq? exp 'eq?)
+      (eq? exp 'procedure?)
       (eq? exp 'or)
       (eq? exp '<)
       (eq? exp '+)
@@ -444,6 +457,7 @@
     ((while? exp)       `(while ,(substitute env (while->condition exp))
                                 ,(substitute env (while->loop exp))
                                 ,(substitute env (while->return exp))))
+    ((quote? exp)        exp)
 
 
     ; Sugar:
@@ -535,6 +549,7 @@
     ((while? exp)      `(while ,(desugar (while->condition exp))
                                ,(desugar (while->loop exp))
                                ,(desugar (while->return exp))))
+    ((quote? exp)      exp)
 
     ; Sugar:
     ((let? exp)        (desugar (let=>lambda exp)))
@@ -632,6 +647,7 @@
                                    (free-vars (while->return exp)))))
     ((set!? exp)     (union (list (set!->var exp))
                             (free-vars (set!->exp exp))))
+    ((quote? exp)    '())
 
     ; Sugar:
     ((let? exp)      (free-vars (let=>lambda exp)))
@@ -713,6 +729,7 @@
                        (analyze-mutable-variables (while->condition exp))
                        (analyze-mutable-variables (while->loop exp))
                        (analyze-mutable-variables (while->return exp))))
+    ((quote? exp)    (void))
 
     ; Sugar:
     ((let? exp)      (begin
@@ -760,7 +777,7 @@
     ((while? exp)    `(while ,(wrap-mutables (while->condition exp))
                              ,(wrap-mutables (while->loop exp))
                              ,(wrap-mutables (while->return exp))))
-
+    ((quote? exp)    exp)
     ; Application:
     ((app? exp)      (map wrap-mutables exp))
     (else            (error "unknown expression type: " exp))))
@@ -850,6 +867,7 @@
     ((while? exp)        `(while ,(closure-convert (while->condition exp))
                                  ,(closure-convert (while->loop exp))
                                  ,(closure-convert (while->return exp))))
+    ((quote? exp)         exp)
     ((set!? exp)         `(set! ,(set!->var exp)
                                 ,(closure-convert (set!->exp exp))))
 
@@ -878,7 +896,12 @@
     (string-append
      "int main (int argc, char* argv[]) {\n"
      preamble
-     "  __is_proc          = MakePrimitive(__prim_is_proc) ;\n"
+     "  __is_pair     = MakePrimitive(__prim_is_pair) ;\n"
+     "  __cons        = MakePrimitive(__prim_cons) ;\n"
+     "  __car         = MakePrimitive(__prim_car) ;\n"
+     "  __cdr         = MakePrimitive(__prim_cdr) ;\n"
+     "  __is_eq       = MakePrimitive(__prim_is_eq) ;\n"
+     "  __is_proc     = MakePrimitive(__prim_is_proc) ;\n"
      "  __or          = MakePrimitive(__prim_or) ;\n"
      "  __lt          = MakePrimitive(__prim_lt) ;\n"
      "  __sum         = MakePrimitive(__prim_sum) ;\n"
@@ -899,6 +922,7 @@
     ((prim?  exp)       (c-compile-prim exp))
     ((ref?   exp)       (c-compile-ref exp))
     ((if? exp)          (c-compile-if exp append-preamble))
+    ((quote? exp)       (c-compile-quote (quote->exp exp)))
 
     ; IR (1):
     ((cell? exp)        (c-compile-cell exp append-preamble))
@@ -926,6 +950,11 @@
 ; c-compile-prim : prim-exp -> string
 (define (c-compile-prim p)
   (cond
+    ((eq? 'pair? p)    "__is_pair")
+    ((eq? 'cons p)    "__cons")
+    ((eq? 'car p)     "__car")
+    ((eq? 'cdr p)     "__cdr")
+    ((eq? 'eq? p)     "__is_eq")
     ((eq? 'procedure? p) "__is_proc")
     ((eq? 'or p)      "__or")
     ((eq? '< p)       "__lt")
@@ -1041,6 +1070,21 @@
 ; get-lambda : lambda-id -> (symbol -> string)
 (define (get-lambda id)
   (cdr (assv id lambdas)))
+
+; c-compile-quote
+(define (c-compile-quote exp)
+  (cond
+   ((null? exp)   "MakeNil()")
+   ((list? exp)   (string-append "MakeCons("
+                                 (c-compile-quote (car exp))
+                                 ","
+                                 (c-compile-quote (cdr exp))
+                                 ")"))
+   ((const? exp)  (c-compile-const exp))
+   ((symbol? exp) (string-append "MakeSymbol(\""
+                                 (symbol->string exp)
+                                 "\")"))
+   (else         (error "unknown quote exp:" exp))))
 
 ; c-compile-closure : closure-exp (string -> void) -> string
 (define (c-compile-closure exp append-preamble)
@@ -1160,6 +1204,11 @@
 
   ; Create storage for primitives:
   (emit "
+Value __is_pair ;
+Value __cons ;
+Value __car ;
+Value __cdr ;
+Value __is_eq ;
 Value __is_proc ;
 Value __or ;
 Value __lt ;
@@ -1178,6 +1227,41 @@ Value __numEqual ;
   (set! compiled-program  (c-compile-program input-program))
 
   ;; Emit primitive procedures:
+  (emit
+   "Value __prim_is_pair(Value e, Value a, Value b) {
+  return MakeBoolean(a.t==CONS);
+}")
+
+  (emit
+   "Value __prim_cons(Value e, Value a, Value b) {
+  return MakeCons(a, b);
+}")
+
+  (emit
+   "Value __prim_car(Value e, Value a, Value b) {
+  return *a.cons.car;
+}")
+
+  (emit
+   "Value __prim_cdr(Value e, Value a, Value b) {
+  return *a.cons.cdr;
+}")
+
+  (emit
+   "Value __prim_is_eq(Value e, Value a, Value b) {
+  int r = 0;
+  if (a.t==b.t) {
+    switch (a.t) {
+      case INT: r=a.z.value==b.z.value;
+      case BOOLEAN: r=!a.b.value==!b.b.value;
+      case CONS: r=a.cons.car==b.cons.car&&a.cons.cdr==b.cons.cdr;
+      case SYMBOL: r=a.sym.name==b.sym.name;
+      case NIL: r=1;
+    }
+  }
+  return MakeBoolean(r);
+}")
+
   (emit
    "Value __prim_is_proc(Value e, Value a, Value b) {
   return MakeBoolean(a.t==CLOSURE) ;

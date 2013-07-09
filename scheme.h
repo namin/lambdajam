@@ -1,9 +1,10 @@
+struct Cons ;
 struct Int ;
 struct Boolean ;
 struct Closure ;
 union Value ;
 
-enum Tag { VOID, INT, BOOLEAN, CLOSURE, CELL, ENV } ;
+enum Tag { VOID, INT, BOOLEAN, CLOSURE, CELL, ENV, CONS, SYMBOL, NIL } ;
 
 typedef union Value (*Lambda)()  ;
 
@@ -33,6 +34,17 @@ struct Cell {
   union Value* addr ;
 } ;
 
+struct Cons {
+  enum Tag t ;
+  union Value* car;
+  union Value* cdr;
+} ;
+
+struct Symbol {
+  enum Tag t;
+  char* name;
+} ;
+
 union Value {
   enum Tag t ;
   struct Int z ;
@@ -40,6 +52,8 @@ union Value {
   struct Closure clo ;
   struct Env env ;
   struct Cell cell ;
+  struct Cons cons ;
+  struct Symbol sym ;
 } ;
 
 typedef union Value Value ;
@@ -90,6 +104,41 @@ static Value NewCell(Value initialValue) {
   return v ;
 }
 
+static Value MakeNil() {
+  Value v ;
+  v.t = NIL ;
+  return v;
+}
+static Value SYMTAB[100];
+int SYMTAB_N = 0;
+static Value MakeSymbol(char* name) {
+  int i;
+  for (i=0; i<SYMTAB_N; i++) {
+    if (strcmp(SYMTAB[i].sym.name, name)==0)
+      return SYMTAB[i];
+  }
+  Value v ;
+  v.sym.t = SYMBOL ;
+  v.sym.name = name;
+  SYMTAB[i++] = v;
+  return v;
+}
+
+static Value MakeCons(Value a, Value d) {
+  Value v ;
+  v.cons.t = CONS ;
+  v.cons.car = malloc(sizeof(Value));
+  v.cons.cdr = malloc(sizeof(Value));
+  *v.cons.car = a;
+  *v.cons.cdr = d;
+  return v ;
+}
+
+extern Value __is_pair;
+extern Value __cons;
+extern Value __car;
+extern Value __cdr;
+extern Value __is_eq;
 extern Value __or;
 extern Value __is_proc;
 extern Value __lt;
