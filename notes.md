@@ -1,6 +1,44 @@
 Program Transformations (a.k.a., Correctness-Preserving Transformations)
 =======================
 
+Running examples:
+
+   * Nada and Will:  factorial
+
+   * students:  fib
+
+   * together:  M
+
+   * together:  lambda calculus interpreter
+
+
+Outline
+-------
+
+  continuations
+
+  CPS examples
+
+  black-box compiler (fib)
+  
+  trampolining
+
+  black-box compiler, revisted (fib)
+
+<break>
+  
+  representation independence
+
+  defunctionalization
+
+<break>
+  
+  registerization
+
+  CPSer
+
+   
+
 CPS (Continuation-Passing Style)
 --------------------------------
 
