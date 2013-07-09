@@ -88,7 +88,7 @@
 
   (lc-tests lc empty-env))
 
-;;;
+;;; Adding call/cc to a CPSed-interpreter
 (let ()
   (define empty-env (lambda (y) (error 'env "unbound variable")))
 
@@ -107,6 +107,9 @@
         (lc-cps e1 env (lambda (v1)
                      (lc-cps e2 env (lambda (v2)
                                   (k (* v1 v2)))))))
+       ((call/cc ,e)
+        (lc-cps e env (lambda (p)
+                        (p (lambda (v k^) (k v)) k))))
        ((if ,c ,a ,b)
         (lc-cps c env (lambda (vc)
                     (if vc
@@ -126,5 +129,13 @@
     (lambda (exp env)
       (lc-cps exp env (lambda (v) v))))
 
-  (lc-tests lc empty-env))
+  (lc-tests lc empty-env)
+
+  (eg (lc '(sub1 (call/cc (lambda (k) 2)))
+          empty-env)
+      1)
+
+  (eg (lc '(sub1 (call/cc (lambda (k) (* 3 (k 2)))))
+          empty-env)
+      1))
 
