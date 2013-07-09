@@ -581,8 +581,8 @@
 ;; CPS
 (define (serious? exp)
   (and (app? exp)
+       (not (quote? exp))
        (or
-        (not (quote? exp))
         (not (prim? (app->fun exp)))
         (memq #t (map serious? exp)))))
 
