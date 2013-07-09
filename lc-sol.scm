@@ -21,7 +21,7 @@
 
 (let ()
   (define empty-env (lambda (y) (error 'env "unbound variable")))
-  
+
   (define lc
     (lambda (exp env)
       (pmatch
@@ -45,13 +45,13 @@
               (lambda (y) (if (eq? x y) a (env y))))))
        ((,rator ,rand)
         ((lc rator env) (lc rand env))))))
-  
+
   (lc-tests lc empty-env))
 
 ;;; CPS
 (let ()
   (define empty-env (lambda (y) (error 'env "unbound variable")))
-  
+
   (define lc-cps
     (lambda (exp env k)
       (pmatch
@@ -85,6 +85,46 @@
   (define lc
     (lambda (exp env)
       (lc-cps exp env (lambda (v) v))))
-  
+
+  (lc-tests lc empty-env))
+
+;;;
+(let ()
+  (define empty-env (lambda (y) (error 'env "unbound variable")))
+
+  (define lc-cps
+    (lambda (exp env k)
+      (pmatch
+       exp
+       (,x (guard (symbol? x)) (k (env x)))
+       (,b (guard (boolean? b)) (k b))
+       (,n (guard (number? n)) (k n))
+       ((sub1 ,e)
+        (lc-cps e env (lambda (v) (k (sub1 v)))))
+       ((zero? ,e)
+        (lc-cps e env (lambda (v) (k (zero? v)))))
+       ((* ,e1 ,e2)
+        (lc-cps e1 env (lambda (v1)
+                     (lc-cps e2 env (lambda (v2)
+                                  (k (* v1 v2)))))))
+       ((if ,c ,a ,b)
+        (lc-cps c env (lambda (vc)
+                    (if vc
+                     (lc-cps a env k)
+                     (lc-cps b env k)))))
+       ((lambda (,x) ,body)
+        (k (lambda (a k)
+             (lc-cps body
+                 (lambda (y) (if (eq? x y) a (env y)))
+                 k))))
+       ((,rator ,rand)
+        (lc-cps rator env (lambda (vrator)
+                        (lc-cps rand env (lambda (vrand)
+                                           (vrator vrand k)))))))))
+
+  (define lc
+    (lambda (exp env)
+      (lc-cps exp env (lambda (v) v))))
+
   (lc-tests lc empty-env))
 
