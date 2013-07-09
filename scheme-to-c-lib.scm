@@ -1267,11 +1267,11 @@ Value __numEqual ;
   int r = 0;
   if (a.t==b.t) {
     switch (a.t) {
-      case INT: r=a.z.value==b.z.value;
-      case BOOLEAN: r=!a.b.value==!b.b.value;
-      case CONS: r=a.cons.car==b.cons.car&&a.cons.cdr==b.cons.cdr;
-      case SYMBOL: r=a.sym.name==b.sym.name;
-      case NIL: r=1;
+      case INT: r=a.z.value==b.z.value; break;
+      case BOOLEAN: r=!a.b.value==!b.b.value; break;
+      case CONS: r=a.cons.car==b.cons.car&&a.cons.cdr==b.cons.cdr; break;
+      case SYMBOL: r=strcmp(a.sym.name,b.sym.name)==0; break;
+      case NIL: r=1; break;
     }
   }
   return MakeBoolean(r);

@@ -109,18 +109,11 @@ static Value MakeNil() {
   v.t = NIL ;
   return v;
 }
-static Value SYMTAB[1000];
-int SYMTAB_N = 0;
+
 static Value MakeSymbol(char* name) {
-  int i;
-  for (i=0; i<SYMTAB_N; i++) {
-    if (strcmp(SYMTAB[i].sym.name, name)==0)
-      return SYMTAB[i];
-  }
-  Value v ;
+  Value v;
   v.t = SYMBOL ;
-  v.sym.name = name;
-  SYMTAB[i++] = v;
+  v.sym.name = name ;
   return v;
 }
 
