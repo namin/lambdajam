@@ -52,6 +52,6 @@
            (if (zero? n)
                1
                       (* n (factorial (sub1 n)))))))
-      -1))
+      5))
   
   (show (lc factorial6 empty-env)))
