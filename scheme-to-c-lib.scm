@@ -1201,6 +1201,7 @@
 
 
 
+  (emit "#include <assert.h>")
   (emit "#include <stdlib.h>")
   (emit "#include <stdio.h>")
   (emit "#include \"scheme.h\"")
@@ -1235,12 +1236,12 @@ Value __numEqual ;
 
   ;; Emit primitive procedures:
   (emit
-   "Value __prim_is_symbol(Value e, Value a, Value b) {
+   "Value __prim_is_symbol(Value e, Value a) {
   return MakeBoolean(a.t==SYMBOL);
 }")
 
   (emit
-   "Value __prim_is_pair(Value e, Value a, Value b) {
+   "Value __prim_is_pair(Value e, Value a) {
   return MakeBoolean(a.t==CONS);
 }")
 
@@ -1250,12 +1251,14 @@ Value __numEqual ;
 }")
 
   (emit
-   "Value __prim_car(Value e, Value a, Value b) {
+   "Value __prim_car(Value e, Value a) {
+  assert(a.t==CONS);
   return *a.cons.car;
 }")
 
   (emit
-   "Value __prim_cdr(Value e, Value a, Value b) {
+   "Value __prim_cdr(Value e, Value a) {
+  assert(a.t==CONS);
   return *a.cons.cdr;
 }")
 
@@ -1281,37 +1284,49 @@ Value __numEqual ;
 
   (emit
    "Value __prim_or(Value e, Value a, Value b) {
+  assert(a.t==BOOLEAN);
+  assert(b.t==BOOLEAN);
   return MakeBoolean(a.b.value || b.b.value) ;
 }")
 
   (emit
    "Value __prim_lt(Value e, Value a, Value b) {
+  assert(a.t==INT);
+  assert(b.t==INT);
   return MakeBoolean(a.z.value < b.z.value) ;
 }")
 
   (emit
    "Value __prim_sum(Value e, Value a, Value b) {
+  assert(a.t==INT);
+  assert(b.t==INT);
   return MakeInt(a.z.value + b.z.value) ;
 }")
 
   (emit
    "Value __prim_product(Value e, Value a, Value b) {
+  assert(a.t==INT);
+  assert(b.t==INT);
   return MakeInt(a.z.value * b.z.value) ;
 }")
 
   (emit
    "Value __prim_difference(Value e, Value a, Value b) {
+  assert(a.t==INT);
+  assert(b.t==INT);
   return MakeInt(a.z.value - b.z.value) ;
 }")
 
   (emit
    "Value __prim_display(Value e, Value v) {
-  printf(\"%i\\n\",v.z.value) ;
+  print_value_ln(v);
   return v ;
 }")
 
   (emit
    "Value __prim_numEqual(Value e, Value a, Value b) {
+  assert(a.t==INT);
+  assert(b.t==INT);
   return MakeBoolean(a.z.value == b.z.value) ;
 }")
 

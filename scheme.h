@@ -41,7 +41,7 @@ struct Cons {
 } ;
 
 struct Symbol {
-  enum Tag t;
+  enum Tag t ;
   char* name;
 } ;
 
@@ -60,7 +60,7 @@ typedef union Value Value ;
 
 static Value MakeClosure(Lambda lam, Value env) {
   Value v ;
-  v.clo.t = CLOSURE ;
+  v.t = CLOSURE ;
   v.clo.lam = lam ;
   v.clo.env = env.env.env ;
   return v ;
@@ -68,21 +68,21 @@ static Value MakeClosure(Lambda lam, Value env) {
 
 static Value MakeInt(int n) {
   Value v ;
-  v.z.t = INT ;
+  v.t = INT ;
   v.z.value = n ;
   return v ;
 }
 
 static Value MakeBoolean(unsigned int b) {
   Value v ;
-  v.b.t = BOOLEAN ;
-  v.b.value = b ;
+  v.t = BOOLEAN ;
+  v.b.value = !!b ;
   return v ;
 }
 
 static Value MakePrimitive(Lambda prim) {
   Value v ;
-  v.clo.t = CLOSURE ;
+  v.t = CLOSURE ;
   v.clo.lam = prim ;
   v.clo.env = NULL ;
   return v ;
@@ -90,7 +90,7 @@ static Value MakePrimitive(Lambda prim) {
 
 static Value MakeEnv(void* env) {
   Value v ;
-  v.env.t = ENV ;
+  v.t = ENV ;
   v.env.env = env ;
   return v ;
 }
@@ -98,7 +98,7 @@ static Value MakeEnv(void* env) {
 
 static Value NewCell(Value initialValue) {
   Value v ;
-  v.cell.t = CELL ;
+  v.t = CELL ;
   v.cell.addr = malloc(sizeof(Value)) ;
   *v.cell.addr = initialValue ;
   return v ;
@@ -118,7 +118,7 @@ static Value MakeSymbol(char* name) {
       return SYMTAB[i];
   }
   Value v ;
-  v.sym.t = SYMBOL ;
+  v.t = SYMBOL ;
   v.sym.name = name;
   SYMTAB[i++] = v;
   return v;
@@ -126,12 +126,51 @@ static Value MakeSymbol(char* name) {
 
 static Value MakeCons(Value a, Value d) {
   Value v ;
-  v.cons.t = CONS ;
+  v.t = CONS ;
   v.cons.car = malloc(sizeof(Value));
   v.cons.cdr = malloc(sizeof(Value));
   *v.cons.car = a;
   *v.cons.cdr = d;
   return v ;
+}
+
+static void print_value(Value v, int dot);
+
+static void print_value_ln(Value a) {
+  print_value(a, 0);
+  printf("\n");
+}
+
+static void print_value(Value v, int dot) {
+  if (dot && v.t!=CONS && v.t!=NIL)
+    printf(" . ");
+  switch (v.t) {
+  case INT:
+    printf("%i",v.z.value);
+    break;
+  case BOOLEAN:
+    printf("%s",v.b.value ? "#t" : "#f");
+    break;
+  case CONS:
+    if (!dot) printf("(");
+    print_value(*v.cons.car, 0);
+    if ((*v.cons.cdr).t!=NIL) printf(" ");
+    print_value(*v.cons.cdr, 1);
+    printf(")");
+    break;
+  case SYMBOL:
+    printf("%s", v.sym.name);
+    break;
+  case NIL:
+    if (!dot) printf("()");
+    break;
+  case CLOSURE:
+    printf("#<procedure>");
+    break;
+  default:
+    printf("#<?>");
+    break;
+  }
 }
 
 extern Value __nil;
