@@ -198,13 +198,19 @@ https://cgi.soic.indiana.edu/~c311/doku.php?id=assignment-9
 
 --
 
-Matt Might's blog posts (http://matt.might.net):
+Matt Might's blog posts ([http://matt.might.net](http://matt.might.net)):
 
 By example: Continuation-passing style in JavaScript 
 http://matt.might.net/articles/by-example-continuation-passing-style/
 
 How to compile with continuations
 http://matt.might.net/articles/cps-conversion/
+
+Compiling Scheme to C with closure conversion
+http://matt.might.net/articles/compiling-scheme-to-c/
+
+Closure conversion: How to compile lambda
+http://matt.might.net/articles/closure-conversion/
 
 --
 
