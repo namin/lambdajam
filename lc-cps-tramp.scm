@@ -52,4 +52,4 @@
                       (* n (factorial (sub1 n)))))))
       6))
   
-  (show (lc '((lambda (x) x) 1) empty-env)))
+  (show (lc factorial6 empty-env)))
