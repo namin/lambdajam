@@ -897,6 +897,8 @@
     (string-append
      "int main (int argc, char* argv[]) {\n"
      preamble
+     "  __nil         = MakeNil(); \n"
+     
      "  __is_symbol   = MakePrimitive(__prim_is_symbol) ;\n"     
      "  __is_pair     = MakePrimitive(__prim_is_pair) ;\n"
      "  __cons        = MakePrimitive(__prim_cons) ;\n"
@@ -1077,7 +1079,7 @@
 ; c-compile-quote
 (define (c-compile-quote exp)
   (cond
-   ((null? exp)   "MakeNil()")
+   ((null? exp)   "__nil")
    ((list? exp)   (string-append "MakeCons("
                                  (c-compile-quote (car exp))
                                  ","
@@ -1207,6 +1209,7 @@
 
   ; Create storage for primitives:
   (emit "
+Value __nil ;
 Value __is_symbol ;
 Value __is_pair ;
 Value __cons ;

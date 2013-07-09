@@ -109,7 +109,7 @@ static Value MakeNil() {
   v.t = NIL ;
   return v;
 }
-static Value SYMTAB[100];
+static Value SYMTAB[1000];
 int SYMTAB_N = 0;
 static Value MakeSymbol(char* name) {
   int i;
@@ -134,6 +134,7 @@ static Value MakeCons(Value a, Value d) {
   return v ;
 }
 
+extern Value __nil;
 extern Value __is_symbol;
 extern Value __is_pair;
 extern Value __cons;
