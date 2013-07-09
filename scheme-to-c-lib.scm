@@ -316,7 +316,8 @@
 
 ; prim? : exp -> boolean
 (define (prim? exp)
-  (or (eq? exp 'pair?)
+  (or (eq? exp 'symbol?)
+      (eq? exp 'pair?)
       (eq? exp 'cons)
       (eq? exp 'car)
       (eq? exp 'cdr)
@@ -896,6 +897,7 @@
     (string-append
      "int main (int argc, char* argv[]) {\n"
      preamble
+     "  __is_symbol   = MakePrimitive(__prim_is_symbol) ;\n"     
      "  __is_pair     = MakePrimitive(__prim_is_pair) ;\n"
      "  __cons        = MakePrimitive(__prim_cons) ;\n"
      "  __car         = MakePrimitive(__prim_car) ;\n"
@@ -950,6 +952,7 @@
 ; c-compile-prim : prim-exp -> string
 (define (c-compile-prim p)
   (cond
+    ((eq? 'symbol? p)    "__is_symbol")   
     ((eq? 'pair? p)    "__is_pair")
     ((eq? 'cons p)    "__cons")
     ((eq? 'car p)     "__car")
@@ -1204,6 +1207,7 @@
 
   ; Create storage for primitives:
   (emit "
+Value __is_symbol ;
 Value __is_pair ;
 Value __cons ;
 Value __car ;
@@ -1227,6 +1231,11 @@ Value __numEqual ;
   (set! compiled-program  (c-compile-program input-program))
 
   ;; Emit primitive procedures:
+  (emit
+   "Value __prim_is_symbol(Value e, Value a, Value b) {
+  return MakeBoolean(a.t==SYMBOL);
+}")
+
   (emit
    "Value __prim_is_pair(Value e, Value a, Value b) {
   return MakeBoolean(a.t==CONS);

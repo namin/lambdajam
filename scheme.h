@@ -134,6 +134,7 @@ static Value MakeCons(Value a, Value d) {
   return v ;
 }
 
+extern Value __is_symbol;
 extern Value __is_pair;
 extern Value __cons;
 extern Value __car;
