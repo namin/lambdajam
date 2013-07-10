@@ -222,6 +222,9 @@ Compiling with Continuations, Continued
 Andrew Kennedy
 http://research.microsoft.com/en-us/um/people/akenn/sml/CompilingWithContinuationsContinued.pdf
 
+CPS in Little Pieces: Composing Partial Continuations
+Daniel P. Friedman and Amr Sabry
+http://www.cs.indiana.edu/hyplan/dfried/p.ps
 --
 
 Will's YouTube Hangouts
