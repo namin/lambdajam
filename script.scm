@@ -73,11 +73,11 @@ a
   (lambda (x xs)
     (cond
      ((null? xs) '())
-     
+
      ((pair? (car xs))
       (cons (rember x (car xs))
             (rember x (cdr xs))))
-     
+
      ((eq? x (car xs))
       (rember x (cdr xs)))
      (else
@@ -348,7 +348,7 @@ a
     (lambda (n k)
        (lambda (v)
          (apply-k k (* n v)))))
-  
+
   (define factorial-cps
     (lambda (n k)
       (if (= n 0)
@@ -358,7 +358,7 @@ a
   (define factorial
     (lambda (n)
       (factorial-cps n (empty-k))))
-  
+
   (eg (factorial 5) 120)
   )
 
@@ -385,7 +385,7 @@ a
   (define factorial-k
     (lambda (n k)
       `(factorial-k ,n ,k)))
-  
+
   (trace-define factorial-cps
     (lambda (n k)
       (if (= n 0)
@@ -409,14 +409,14 @@ a
   (define empty-env
     (lambda ()
       (lambda (x) (error 'env-lookup "unbound variable"))))
-  
+
   (define extend-env
     (lambda  (x a env)
       (lambda (y)
         (if (eq? y x)
             a
             (apply-env env y)))))
-  
+
 (define eval-exp-cps
   (lambda (exp env k)
     (pmatch
@@ -488,11 +488,11 @@ a
   (define empty-env
     (lambda ()
       `(empty-env)))
-  
+
   (define extend-env
     (lambda  (x a env)
       `(extend-env ,x ,a ,env)))
-  
+
 (trace-define eval-exp-cps
   (lambda (exp env k)
     (pmatch
@@ -556,11 +556,11 @@ a
   (define empty-env
     (lambda ()
       `()))
-  
+
   (define extend-env
     (lambda  (x a env)
       (cons (cons x a) env)))
-  
+
 (trace-define eval-exp-cps
   (lambda (exp env k)
     (pmatch
@@ -626,11 +626,11 @@ a
   (define empty-env
     (lambda ()
       `()))
-  
+
   (define extend-env
     (lambda  (x a env)
       (cons (cons x a) env)))
-  
+
 (trace-define eval-exp-cps
   (lambda (exp env k)
     (pmatch
