@@ -333,3 +333,68 @@ a
                     1
                     (* n (factorial (sub1 n)))))))
            6))
+
+;;; Representation Independence wrt to Continuations
+(let ()
+  (define apply-k
+    (lambda (k v)
+      (k v)))
+
+  (define empty-k
+    (lambda ()
+      (lambda (v) v)))
+
+  (define factorial-k
+    (lambda (n k)
+       (lambda (v)
+         (apply-k k (* n v)))))
+  
+  (define factorial-cps
+    (lambda (n k)
+      (if (= n 0)
+          (apply-k k 1)
+          (factorial-cps (- n 1)
+                         (factorial-k n k)))))
+  (define factorial
+    (lambda (n)
+      (factorial-cps n (empty-k))))
+  
+  (eg (factorial 5) 120)
+  )
+
+;;; First-Order Representation for continuations
+;;; Defunctionalization
+
+(let ()
+  (trace-define apply-k
+    (lambda (k^ v)
+      (pmatch
+       k^
+       ((empty-k)
+        v)
+       ((factorial-k ,n ,k)
+        (apply-k k (* n v)))
+       ;(,k^ (guard (procedure? k^))
+       ;     (k^ v))
+       )))
+
+  (define empty-k
+    (lambda ()
+      `(empty-k)))
+
+  (define factorial-k
+    (lambda (n k)
+      `(factorial-k ,n ,k)))
+  
+  (trace-define factorial-cps
+    (lambda (n k)
+      (if (= n 0)
+          (apply-k k 1)
+          (factorial-cps (- n 1)
+                         (factorial-k n k)))))
+  (define factorial
+    (lambda (n)
+      (factorial-cps n (empty-k))))
+
+  (eg (factorial 5) 120)
+  )
