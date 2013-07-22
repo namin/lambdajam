@@ -398,3 +398,302 @@ a
 
   (eg (factorial 5) 120)
   )
+
+;;; Representation Independence wrt environment
+(let ()
+
+  (define apply-env
+    (lambda (env x)
+      (env x)))
+
+  (define empty-env
+    (lambda ()
+      (lambda (x) (error 'env-lookup "unbound variable"))))
+  
+  (define extend-env
+    (lambda  (x a env)
+      (lambda (y)
+        (if (eq? y x)
+            a
+            (apply-env env y)))))
+  
+(define eval-exp-cps
+  (lambda (exp env k)
+    (pmatch
+     exp
+     (,x (guard (symbol? x)) (k (apply-env env x)))
+     (,n (guard (number? n)) (k n))
+     (,b (guard (boolean? b)) (k b))
+     ((zero? ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (zero? v)))))
+     ((sub1 ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (sub1 v)))))
+     ((* ,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (v1)
+                             (eval-exp-cps e2 env (lambda (v2)
+                                                    (k (* v1 v2)))))))
+     ((if ,c ,a ,b)
+      (eval-exp-cps c env (lambda (vc)
+                            (if vc
+                                (eval-exp-cps a env k)
+                                (eval-exp-cps b env k)))))
+     ((lambda (,x) ,body)
+      (k (lambda (a k^)
+           (eval-exp-cps body
+                         (extend-env x a env)
+                         k^))))
+     ((,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (p)
+                             (eval-exp-cps e2 env (lambda (a)
+                                                    (p a k)))))))))
+
+(define eval-top
+  (lambda (exp)
+    (eval-exp-cps exp (empty-env) (lambda (v) v))))
+
+(eg (eval-top '((lambda (x) 1) 2))
+    1)
+
+(eval-top '(((lambda (fun)
+              ((lambda (F)
+                 (F F))
+               (lambda (F)
+                 (fun (lambda (x) ((F F) x))))))
+            (lambda (factorial)
+              (lambda (n)
+                (if (zero? n)
+                    1
+                    (* n (factorial (sub1 n)))))))
+           6))
+)
+
+;;;
+(let ()
+
+  (define apply-env
+    (lambda (env^ y)
+      (pmatch
+       env^
+       ((empty-env)
+        (error 'apply-env "unbound variable"))
+       ((extend-env ,x ,a ,env)
+        (if (eq? y x)
+            a
+            (apply-env env y)))
+       (,env^ (guard (procedure? env^))
+        (env^ x)))))
+
+  (define empty-env
+    (lambda ()
+      `(empty-env)))
+  
+  (define extend-env
+    (lambda  (x a env)
+      `(extend-env ,x ,a ,env)))
+  
+(trace-define eval-exp-cps
+  (lambda (exp env k)
+    (pmatch
+     exp
+     (,x (guard (symbol? x)) (k (apply-env env x)))
+     (,n (guard (number? n)) (k n))
+     (,b (guard (boolean? b)) (k b))
+     ((zero? ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (zero? v)))))
+     ((sub1 ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (sub1 v)))))
+     ((* ,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (v1)
+                             (eval-exp-cps e2 env (lambda (v2)
+                                                    (k (* v1 v2)))))))
+     ((if ,c ,a ,b)
+      (eval-exp-cps c env (lambda (vc)
+                            (if vc
+                                (eval-exp-cps a env k)
+                                (eval-exp-cps b env k)))))
+     ((lambda (,x) ,body)
+      (k (lambda (a k^)
+           (eval-exp-cps body
+                         (extend-env x a env)
+                         k^))))
+     ((,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (p)
+                             (eval-exp-cps e2 env (lambda (a)
+                                                    (p a k)))))))))
+
+(define eval-top
+  (lambda (exp)
+    (eval-exp-cps exp (empty-env) (lambda (v) v))))
+
+(eg (eval-top '((lambda (x) 1) 2))
+    1)
+
+(eval-top '(((lambda (fun)
+              ((lambda (F)
+                 (F F))
+               (lambda (F)
+                 (fun (lambda (x) ((F F) x))))))
+            (lambda (factorial)
+              (lambda (n)
+                (if (zero? n)
+                    1
+                    (* n (factorial (sub1 n)))))))
+           6))
+)
+
+(let ()
+
+  (define apply-env
+    (lambda (env^ y)
+      (cond
+       ((assq y env^) => cdr)
+       (else (error 'apply-env "unbound variable")))))
+
+  (define empty-env
+    (lambda ()
+      `()))
+  
+  (define extend-env
+    (lambda  (x a env)
+      (cons (cons x a) env)))
+  
+(trace-define eval-exp-cps
+  (lambda (exp env k)
+    (pmatch
+     exp
+     (,x (guard (symbol? x)) (k (apply-env env x)))
+     (,n (guard (number? n)) (k n))
+     (,b (guard (boolean? b)) (k b))
+     ((zero? ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (zero? v)))))
+     ((sub1 ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (sub1 v)))))
+     ((* ,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (v1)
+                             (eval-exp-cps e2 env (lambda (v2)
+                                                    (k (* v1 v2)))))))
+     ((if ,c ,a ,b)
+      (eval-exp-cps c env (lambda (vc)
+                            (if vc
+                                (eval-exp-cps a env k)
+                                (eval-exp-cps b env k)))))
+     ((lambda (,x) ,body)
+      (k (lambda (a k^)
+           (eval-exp-cps body
+                         (extend-env x a env)
+                         k^))))
+     ((,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (p)
+                             (eval-exp-cps e2 env (lambda (a)
+                                                    (p a k)))))))))
+
+(define eval-top
+  (lambda (exp)
+    (eval-exp-cps exp (empty-env) (lambda (v) v))))
+
+(eg (eval-top '((lambda (x) 1) 2))
+    1)
+
+(eval-top '(((lambda (fun)
+              ((lambda (F)
+                 (F F))
+               (lambda (F)
+                 (fun (lambda (x) ((F F) x))))))
+            (lambda (factorial)
+              (lambda (n)
+                (if (zero? n)
+                    1
+                    (* n (factorial (sub1 n)))))))
+           6))
+)
+
+;;; adding call/cc
+
+(let ()
+
+  (define apply-env
+    (lambda (env^ y)
+      (cond
+       ((assq y env^) => cdr)
+       (else (error 'apply-env "unbound variable")))))
+
+  (define empty-env
+    (lambda ()
+      `()))
+  
+  (define extend-env
+    (lambda  (x a env)
+      (cons (cons x a) env)))
+  
+(trace-define eval-exp-cps
+  (lambda (exp env k)
+    (pmatch
+     exp
+     (,x (guard (symbol? x)) (k (apply-env env x)))
+     (,n (guard (number? n)) (k n))
+     (,b (guard (boolean? b)) (k b))
+     ((zero? ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (zero? v)))))
+     ((sub1 ,e)
+      (eval-exp-cps e env (lambda (v)
+                            (k (sub1 v)))))
+     ((* ,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (v1)
+                             (eval-exp-cps e2 env (lambda (v2)
+                                                    (k (* v1 v2)))))))
+     ((if ,c ,a ,b)
+      (eval-exp-cps c env (lambda (vc)
+                            (if vc
+                                (eval-exp-cps a env k)
+                                (eval-exp-cps b env k)))))
+     ((call/cc ,e) ;; (call/cc (lambda (cont) ...))
+      (eval-exp-cps e env (lambda (p)
+                            (p (lambda (v k^) (k v)) k))))
+     ((lambda (,x) ,body)
+      (k (lambda (a k^)
+           (eval-exp-cps body
+                         (extend-env x a env)
+                         k^))))
+     ((,e1 ,e2)
+      (eval-exp-cps e1 env (lambda (p)
+                             (eval-exp-cps e2 env (lambda (a)
+                                                    (p a k)))))))))
+
+(define eval-top
+  (lambda (exp)
+    (eval-exp-cps exp (empty-env) (lambda (v) v))))
+
+(eg (eval-top '((lambda (x) 1) 2))
+    1)
+
+(eval-top '(((lambda (fun)
+              ((lambda (F)
+                 (F F))
+               (lambda (F)
+                 (fun (lambda (x) ((F F) x))))))
+            (lambda (factorial)
+              (lambda (n)
+                (if (zero? n)
+                    1
+                    (* n (factorial (sub1 n)))))))
+            6))
+(eg (eval-top '(call/cc (lambda (k) (* 3 2))))
+    6)
+
+(eg (eval-top '(call/cc (lambda (k) (* 3 (k 2)))))
+    2)
+
+(eg (eval-top '(call/cc (lambda (k) (* (k 2) 0))))
+    2)
+
+(eg (eval-top '(* 3 (call/cc (lambda (k) (* (k 2) 0)))))
+    6)
+)
+
