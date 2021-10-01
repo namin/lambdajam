@@ -1,9 +1,7 @@
 ;; A Scheme-to-C compiler.
 
-;; Adapted from
-;; Author: Matthew Might
-;; Site:   http://matt.might.net/
-;;         http://www.ucombinator.org/
+;; Adapted from Matthew Might
+;; https://matt.might.net/articles/compiling-scheme-to-c/
 
 ;; The purpose of this compiler is to demonstrate
 ;; the most direct possible mapping of Scheme into C.
