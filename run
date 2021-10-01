@@ -1,5 +1,6 @@
 #!/bin/bash
 
 ./interp $1 <&0 >out.c
-gcc -o out out.c
+#gcc -o out out.c
+gcc-11 -o out out.c
 ./out

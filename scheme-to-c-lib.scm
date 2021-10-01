@@ -1206,6 +1206,7 @@
   (emit "#include <assert.h>")
   (emit "#include <stdlib.h>")
   (emit "#include <stdio.h>")
+  (emit "#include <string.h>")
   (emit "#include \"scheme.h\"")
 
   (emit "")
