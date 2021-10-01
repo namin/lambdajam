@@ -225,7 +225,6 @@ http://research.microsoft.com/en-us/um/people/akenn/sml/CompilingWithContinuatio
 CPS in Little Pieces: Composing Partial Continuations
 Daniel P. Friedman and Amr Sabry
 http://www.cs.indiana.edu/hyplan/dfried/p.ps
---
 
 Will's YouTube Hangouts
 Tutorial Tuesday #1: Intro to continuations, call/cc, and CPS 

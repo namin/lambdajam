@@ -1,1 +1,3 @@
 Change the ./interp script according to your Scheme version.
+Change the ./run script according to your version of gcc (not compatible with clang).
+Example run: ./run <factorial-direct.scm 
