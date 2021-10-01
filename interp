@@ -1,4 +1,5 @@
 #!/bin/bash
 
-petite --script scheme-to-c.scm $1 <&0 >&1
+chez --script scheme-to-c.scm $1 <&0 >&1
+#petite --script scheme-to-c.scm $1 <&0 >&1
 #racket scheme-to-c.rkt $1 <&0 >&1
