@@ -1,7 +1,7 @@
 Workshop on Program Transformations
 -----------------------------------
 
-We'll guide you in writing your own Scheme-to-C translator by
+We (Nada Amin and Will Byrd) guide you in writing your own Scheme-to-C translator by
 demystifying the program transformations that make a higher-order
 functional program run on a spartan host. You'll learn about
 continuation-passing style, representation independence,
