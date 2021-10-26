@@ -15,4 +15,3 @@ challenge you to automate the steps!
 ## History
 - Lambda Jam, July 2013 (Chicago, IL)
 - [Hacker News / Recurse Center](https://www.recurse.com/), July 2013 (New York, NY)
-- [PL Studio at Harvard University](https://pl-design-seminar.seas.harvard.edu/), November 2021 (Allston, MA)
