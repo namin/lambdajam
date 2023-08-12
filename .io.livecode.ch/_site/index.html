@@ -229,19 +229,18 @@ a</div>
 
 <h5>Direct Style</h5>
 <div class="live" id="factorial">
-(define factorial
+(trace-define factorial
   (lambda (n)
     (if (= n 0)
         1
         (* n (factorial (- n 1))))))
-;;(trace factorial)
 ;;(factorial -1)
 (factorial 6)
 </div>
 
 <h5>Accumulator-Passing Style</h5>
 <div class="live" id="factorial-aps">
-(define factorial-iter
+(trace-define factorial-iter
   (lambda (n acc)
     (if (= n 0)
         acc
@@ -249,7 +248,6 @@ a</div>
 (define factorial
   (lambda (n)
     (factorial-iter n 1)))
-;;(trace factorial-iter)
 ;;(factorial -1)
 (factorial 6)
 </div>
@@ -263,7 +261,7 @@ a</div>
 </ul>
 
 <div class="live" id="factorial-cps">
-(define factorial-cps
+(trace-define factorial-cps
   (lambda (n k)
     (if (= n 0)
         (k 1)
@@ -272,7 +270,6 @@ a</div>
 (define factorial
   (lambda (n)
     (factorial-cps n (lambda (v) v))))
-;;(trace factorial-cps)
 (factorial 5)</div>
 
 <h4>Fibonacci</h4>
