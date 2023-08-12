@@ -1,0 +1,20 @@
+{% extends "base_livecode.html" %}
+
+{% block title %}Program Transformations{% endblock %}
+
+{% block content %}
+<h2>Scheme</h2>
+<div class="live" id="ex1">
+(+ 1 2)
+(+ (+ 1 2) (+ 3 4))
+(+ 3 7)
+((lambda (x) (+ x 1)) 1)
+((lambda () 1))
+(if (= 1 1) 2 (/ 1 0))
+
+((if (= 1 1) - +) 2 1)
+(((lambda () +)) 1 2)
+((lambda () (display "hello")))
++</div>
+
+{% endblock %}
