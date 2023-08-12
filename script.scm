@@ -65,10 +65,6 @@ a
      ((null? xs) ys)
      (else (cons (car xs) (append (cdr xs) ys))))))
 
-(rember 'a '(a b c))   ;; '(b c)
-(rember 'b '(a b c b)) ;; '(a c)
-(rember 'b '(a (b a) c b)) ;; '(a (a) c)
-(rember 'b '(a (b b (b) a b) c b))
 (define rember
   (lambda (x xs)
     (cond
@@ -83,7 +79,10 @@ a
      (else
       (cons (car xs)
             (rember x (cdr xs)))))))
-
+(rember 'a '(a b c))   ;; '(b c)
+(rember 'b '(a b c b)) ;; '(a c)
+(rember 'b '(a (b a) c b)) ;; '(a (a) c)
+(rember 'b '(a (b b (b) a b) c b))
 
 (define foo '(hello there))
 `(,foo ,foo)
@@ -696,4 +695,3 @@ a
 (eg (eval-top '(* 3 (call/cc (lambda (k) (* (k 2) 0)))))
     6)
 )
-
