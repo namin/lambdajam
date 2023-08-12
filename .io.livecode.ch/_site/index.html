@@ -199,35 +199,47 @@ a</div>
 
 <h2>Program Transformations</h2>
 
-<h3>Continuation-Passing Style</h3>
+<h3>Continuation-Passing Style (CPS)</h3>
 
-<div class="live" id="cps">
-;;; continuations
-;;; representation of the rest of the work to be done
+<p>A continuation represents the rest of the computation to be done.</p>
 
-(+ 1 2 (+ 3 4))
-((lambda (v) v) (+ 1 2 (+ 3 4)))
-((lambda (HOLE) (+ 1 2 HOLE)) (+ 3 4)) ;; 12
-((lambda (v) (+ 1 v (+ 3 4))) 2)
 
-(+ (+ 1 2) (+ 3 4))
-((lambda (v) (+ v (+ 3 4))) (+ 1 2))
-((lambda (v) (+ (+ 1 2) v)) (+ 3 4))
+<div class="live" id="cps1">
+(+ 1 2 (+ 3 4))</div>
+<div class="live" id="cps2">
+((lambda (v) v) (+ 1 2 (+ 3 4)))</div>
+<div class="live" id="cps3">
+((lambda (HOLE) (+ 1 2 HOLE)) (+ 3 4))</div>
+<div class="live" id="cps4">
+((lambda (v) (+ 1 v (+ 3 4))) 2)</div>
 
-(lambda (v) v) ;; identity continuation
+<div class="live" id="cps5">
+(+ (+ 1 2) (+ 3 4))</div>
+<div class="live" id="cps6">
+((lambda (v) (+ v (+ 3 4))) (+ 1 2))</div>
+<div class="live" id="cps7">
+((lambda (v) (+ (+ 1 2) v)) (+ 3 4))</div>
 
-;;; Continuation-Passing Style
+<p>Identity continuation:</p>
+<div class="live" id="cps8">
+(lambda (v) v)</div>
 
-;;; direct-style
+<h4>Factorial</h4>
+
+<h5>Direct Style</h5>
+<div class="live" id="factorial">
 (define factorial
   (lambda (n)
     (if (= n 0)
         1
         (* n (factorial (- n 1))))))
-(trace factorial)
+;;(trace factorial)
 ;;(factorial -1)
+(factorial 6)
+</div>
 
-;;; accumulator
+<h5>Accumulator-Passing Style</h5>
+<div class="live" id="factorial-aps">
 (define factorial-iter
   (lambda (n acc)
     (if (= n 0)
@@ -236,15 +248,20 @@ a</div>
 (define factorial
   (lambda (n)
     (factorial-iter n 1)))
-(trace factorial-iter)
+;;(trace factorial-iter)
 ;;(factorial -1)
+(factorial 6)
+</div>
 
-;;; Steps
-;;; - Change the name with -cps.
-;;; - Add k argument to lambda.
-;;; - Return by applying k.
-;;; - Serious calls need to be transformed.
+<h5>Steps for CPS</h5>
+<ul>
+<li>Change the name with -cps.</li>
+<li>Add <code>k</code> argument to <code>lambda</code>.</li>
+<li>Return by applying <code>k</code>.</li>
+<li>Serious calls need to be transformed.</li>
+</ul>
 
+<div class="live" id="factorial-cps">
 (define factorial-cps
   (lambda (n k)
     (if (= n 0)
@@ -254,15 +271,21 @@ a</div>
 (define factorial
   (lambda (n)
     (factorial-cps n (lambda (v) v))))
-(factorial 5)
-(trace factorial-cps)
+;;(trace factorial-cps)
+(factorial 5)</div>
 
-;;; direct-style
+<h4>Fibonacci</h4>
+
+<h5>Direct Style</h5>
+<div class="live" id="fib-direct-style">
 (define fib
   (lambda (n)
     (if (< n 2) n
         (+ (fib (- n 1)) (fib (- n 2))))))
+(fib 5)</div>
 
+<h5>CPS</h5>
+<div class="live" id="fib-cps">
 (define fib-cps
   (lambda (n k)
     (if (< n 2) (k n)
@@ -273,8 +296,7 @@ a</div>
 (define fib
   (lambda (n)
     (fib-cps n (lambda (v) v))))
-(fib 5)
-</div>
+(fib 5)</div>
 
 <h3>Trampolining</h3>
 <div class="live" id="trampolining">
@@ -351,7 +373,7 @@ a</div>
   (lambda (exp)
     (eval-exp-cps exp empty-env (lambda (v) v))))
 
-(trace eval-exp-cps)
+;;(trace eval-exp-cps)
 (eg (eval-top '((lambda (x) 1) 2))
     1)
 
