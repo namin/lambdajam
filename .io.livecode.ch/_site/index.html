@@ -4,65 +4,93 @@
 
 {% block content %}
 <h2>Scheme</h2>
-<div class="live" id="scheme">
-(+ 1 2)
-(+ (+ 1 2) (+ 3 4))
-(+ 3 7)
-((lambda (x) (+ x 1)) 1)
-((lambda () 1))
-(if (= 1 1) 2 (/ 1 0))
+<h3>Basics</h3>
+<div class="live" id="scheme1">
+(+ 1 2)</div>
+<div class="live" id="scheme2">
+(+ (+ 1 2) (+ 3 4))</div>
+<div class="live" id="scheme3">
+(+ 3 7)</div>
+<div class="live" id="scheme4">
+((lambda (x) (+ x 1)) 1)</div>
+<div class="live" id="scheme5">
+((lambda () 1))</div>
+<div class="live" id="scheme6">
+(if (= 1 1) 2 (/ 1 0))</div>
+<div class="live" id="scheme7">
+((if (= 1 1) - +) 2 1)</div>
+<div class="live" id="scheme8">
+(((lambda () +)) 1 2)</div>
+<div class="live" id="scheme9">
+((lambda () (display "hello")))</div>
+<div class="live" id="scheme10">
++</div>
 
-((if (= 1 1) - +) 2 1)
-(((lambda () +)) 1 2)
-((lambda () (display "hello")))
-+
-
-
+<h3>Definitions</h3>
+<div class="live" id="scheme-a">
 (define a 1)
-a
+a</div>
+<div class="live" id="scheme-inc">
 (define inc (lambda (x) (+ x 1)))
-(inc 1)
+(inc 1)</div>
 
+<div class="live norun" id="scheme-adder">
 (define adder
   (lambda (x)
     (lambda (y)
-      (+ x y))))
-(adder 1) ;; #<procedure>
-((adder 1) 2) ;; 3
+      (+ x y))))</div>
+<div class="live" id="scheme-adder1" data-lib="scheme-adder">
+(adder 1)</div>
+<div class="live" id="scheme-adder12" data-lib="scheme-adder">
+((adder 1) 2)</div>
 
-(cons 1
-      (cons 2 '())
-      )
-;; (1 . '(2 . '()))
-;; (1 2)
-(cdr  (cons 'a 'd))
-(pair? (cons 1 2)) ;; #t
-(list? (cons 1 2)) ;; #f
-(null? '()) ;; #t
-(null? (cons 1 '())) ;; #f
-(cons 'a (cons 'b 'c))
+<h3><code>cons</code></h3>
+<div class="live" id="scheme-cons1">
+(cons 1 (cons 2 '()))</div>
+<div class="live" id="scheme-cons2">
+'(1 . (2 . ()))
+</div>
+<div class="live" id="scheme-cons3">
+(cdr  (cons 'a 'd))</div>
+<div class="live" id="scheme-cons4">
+(pair? (cons 1 2))</div>
+<div class="live" id="scheme-cons5">
+(list? (cons 1 2))</div>
+<div class="live" id="scheme-cons6">
+(null? '())</div>
+<div class="live" id="scheme-cons7">
+(null? (cons 1 '()))</div>
+<div class="live" id="scheme-cons8">
+(cons 'a (cons 'b 'c))</div>
 
-;;; Proper List
-;;; either:
-;;; (1) empty list
-;;; (2) a pair whose cdr is a proper list
+<h3>Proper Lists</h3>
+<p>Either
+  <ol>
+    <li>empty list;</li>
+    <li>a pair whose <code>cdr</code> is a proper list.</li>
+</ol></p>
 
-(cadr '(1 2 3))
-(car (cdr '(1 2 3)))
+<div class="live" id="scheme-cons9">
+(cadr '(1 2 3))</div>
+<div class="live" id="scheme-cons10">
+(car (cdr '(1 2 3)))</div>
 
-(append '(1 2 3) '(4 5 6))
+<div class="live" id="scheme-append-ex">
+(append '(1 2 3) '(4 5 6))</div>
+<div class="live" id="scheme-append">
 (define append
   (lambda (xs ys)
     (if (null? xs)
         ys
-        (cons (car xs) (append (cdr xs) ys)))))
-
+        (cons (car xs) (append (cdr xs) ys)))))</div>
+<div class="live" id="scheme-append-with-cond">
 (define append
   (lambda (xs ys)
     (cond
      ((null? xs) ys)
-     (else (cons (car xs) (append (cdr xs) ys))))))
+     (else (cons (car xs) (append (cdr xs) ys))))))</div>
 
+<div class="live" id="scheme-rember">
 (define rember
   (lambda (x xs)
     (cond
@@ -76,17 +104,23 @@ a
       (rember x (cdr xs)))
      (else
       (cons (car xs)
-            (rember x (cdr xs)))))))
-(rember 'a '(a b c))   ;; '(b c)
-(rember 'b '(a b c b)) ;; '(a c)
-(rember 'b '(a (b a) c b)) ;; '(a (a) c)
-(rember 'b '(a (b b (b) a b) c b))
+            (rember x (cdr xs)))))))</div>
+<div class="live" id="scheme-rember-ex1" data-lib="scheme-rember">
+(rember 'a '(a b c))</div>
+<div class="live" id="scheme-rember-ex2" data-lib="scheme-rember">
+(rember 'b '(a b c b))</div>
+<div class="live" id="scheme-rember-ex3" data-lib="scheme-rember">
+(rember 'b '(a (b a) c b))</div>
+<div class="live" id="scheme-rember-ex4" data-lib="scheme-rember">
+(rember 'b '(a (b b (b) a b) c b))</div>
 
+<div class="live" id="scheme-quasi1">
 (define foo '(hello there))
-`(,foo ,foo)
-`(,(+ 1 2) ,(+ 3 4)) ;; (3 7)
-`(,(+ 1 2) (+ 3 4)) ;; (3 (+ 3 4))
-</div>
+`(,foo ,foo)</div>
+<div class="live" id="scheme-quasi2">
+`(,(+ 1 2) ,(+ 3 4))</div>
+<div class="live" id="scheme-quasi3">
+`(,(+ 1 2) (+ 3 4))</div>
 
 <h2>Interpreters</h2>
 <div class="live" id="interpreter">
