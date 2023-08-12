@@ -299,21 +299,24 @@ a</div>
 (fib 5)</div>
 
 <h3>Trampolining</h3>
-<div class="live" id="trampolining">
+<p>Recall:</p>
+<div class="live" id="trampolining-recall-cps">
 (define factorial-cps
   (lambda (n k)
     (lambda ()
       (if (= n 0)
           (k 1)
           (factorial-cps (- n 1) (lambda (v)
-                                   (k (* n v))))))))
-
+                                   (k (* n v))))))))</div>
+<p>Add thunks:</p>
+<div class="live" id="trampolining-cps">
 (define factorial-cps
   (lambda (n k)
     (if (= n 0)
         (lambda () (k 1))
         (lambda () (factorial-cps (- n 1) (lambda (v)
-                                       (k (* n v))))))))
+                                       (k (* n v))))))))</div>
+<div class="live" id="trampolining-driver-while" data-lib="trampolining-cps">
 (define factorial
   (lambda (n)
     (let ((r (factorial-cps n (lambda (v) v))))
@@ -321,13 +324,15 @@ a</div>
              (set! r (r)) ;; body of the while
              r)) ;; return after the while
     ))
-
+(factorial 6)</div>
+<div class="live" id="trampolining-driver-loop" data-lib="trampolining-cps">
 (define factorial
   (lambda (n)
     (let loop ((r (factorial-cps n (lambda (v) v))))
       (if (procedure? r)
           (loop (r))
-          r))))</div>
+          r))))
+(factorial 6)</div>
 
 <h3>CPS-ing interpreter</h3>
 <div class="live" id="cps-interpreter">
