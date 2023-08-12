@@ -82,15 +82,16 @@ a</div>
   (lambda (xs ys)
     (if (null? xs)
         ys
-        (cons (car xs) (append (cdr xs) ys)))))</div>
+        (cons (car xs) (append (cdr xs) ys)))))
+(append '(1 2 3) '(4 5 6))</div>
 <div class="live" id="scheme-append-with-cond">
 (define append
   (lambda (xs ys)
     (cond
      ((null? xs) ys)
-     (else (cons (car xs) (append (cdr xs) ys))))))</div>
-
-<div class="live" id="scheme-rember">
+     (else (cons (car xs) (append (cdr xs) ys))))))
+(append '(1 2 3) '(4 5 6))</div>
+<div class="live norun" id="scheme-rember">
 (define rember
   (lambda (x xs)
     (cond
